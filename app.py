@@ -196,8 +196,13 @@ def findRelatedVector(questionVector):
 
 @st.cache_resource
 def initModel():
+    load_dotenv()
 
-    apiKey = os.getenv("OPENROUTER_API_KEY")
+    # Streamlit Cloud first, local .env second
+    try:
+        apiKey = st.secrets["OPENROUTER_API_KEY"]
+    except:
+        apiKey = os.getenv("OPENROUTER_API_KEY")
 
     if not apiKey:
         return None
@@ -206,7 +211,6 @@ def initModel():
         api_key=apiKey,
         base_url="https://openrouter.ai/api/v1"
     )
-
     return client
 
 
